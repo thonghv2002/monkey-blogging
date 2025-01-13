@@ -1,4 +1,7 @@
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import Input from "~/components/input";
+import Label from "~/components/label";
 
 const SignUpPageStyles = styled.div`
   min-height: 100vh;
@@ -53,6 +56,7 @@ const SignUpPageStyles = styled.div`
 `;
 
 const SignUpPage = () => {
+  const { control } = useForm({});
   return (
     <SignUpPageStyles>
       <div className="container">
@@ -64,14 +68,15 @@ const SignUpPage = () => {
         <h1 className="heading">Monkey Blogging</h1>
         <form className="form">
           <div className="field">
-            <label htmlFor="fullname" className="label">
-              Fullname
-            </label>
-            <input
+            <Label htmlFor="fullname">Fullname</Label>
+            <Input
               type="text"
+              name="fullname"
               id="fullname"
               className="input"
               placeholder="Enter your fullname"
+              control={control}
+              hasIcon
             />
           </div>
         </form>
