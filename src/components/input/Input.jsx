@@ -26,6 +26,14 @@ const InputStyles = styled.div`
   input::-moz-input-place-holder {
     color: #84878b;
   }
+
+  .icon-eye {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
 `;
 
 const Input = ({
