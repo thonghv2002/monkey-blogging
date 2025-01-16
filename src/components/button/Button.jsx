@@ -26,6 +26,11 @@ const ButtonStyles = styled.button`
   }
 `;
 
+/**
+ * @requires
+ * @param {string} type Type of button 'button' or 'submit'
+ * @returns
+ */
 const Button = ({
   type = "button",
   onClick = () => {},
@@ -42,7 +47,7 @@ const Button = ({
 };
 
 Button.propTypes = {
-  type: PropTypes.string,
+  type: PropTypes.oneOf(["button" | "submit"]).isRequired,
   onClick: PropTypes.func,
   children: PropTypes.node,
   isLoading: PropTypes.bool,
