@@ -10,6 +10,10 @@ import IconEyeOpen from "~/icons/IconEyeOpen";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db } from "~/firebase-app/config";
+import { useNavigate } from "react-router-dom";
+import { addDoc, collection } from "firebase/firestore";
 
 const SignUpPageStyles = styled.div`
   min-height: 100vh;
@@ -43,6 +47,7 @@ const schema = yup.object().shape({
 });
 
 const SignUpPage = () => {
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -53,13 +58,28 @@ const SignUpPage = () => {
     mode: "onChange",
     resolver: yupResolver(schema),
   });
-  const handlerSignup = (values) => {
+  const handlerSignup = async (values) => {
     if (!isValid) return;
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 3000);
+    console.log("🚀 ~ handlerSignup ~ values:", values);
+    const user = await createUserWithEmailAndPassword(
+      auth,
+      values.email,
+      values.password
+    );
+
+    await updateProfile(auth.currentUser, {
+      displayName: values.fullname,
     });
+
+    const colRef = collection(db, "users");
+    await addDoc(colRef, {
+      fullname: values.fullname,
+      email: values.email,
+      password: values.password,
+    });
+
+    toast.success("Register successfully!!");
+    navigate("/");
   };
 
   const [togglePassword, setTogglePassword] = useState(false);
