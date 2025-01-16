@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import styled from "styled-components";
 import Button from "~/components/button";
 import Field from "~/components/field";
 import Input from "~/components/input";
@@ -12,27 +11,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "~/firebase-app/config";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
-
-const SignUpPageStyles = styled.div`
-  min-height: 100vh;
-
-  .logo {
-    margin: 0 auto 20px;
-  }
-
-  .heading {
-    text-align: center;
-    color: ${(props) => props.theme.primary};
-    font-weight: bold;
-  }
-
-  .form {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-`;
+import AuthenticationPage from "./AuthenticationPage";
 
 const schema = yup.object().shape({
   fullname: yup.string().required("Please enter your fullname"),
@@ -60,7 +41,6 @@ const SignUpPage = () => {
   });
   const handlerSignup = async (values) => {
     if (!isValid) return;
-    console.log("🚀 ~ handlerSignup ~ values:", values);
     const user = await createUserWithEmailAndPassword(
       auth,
       values.email,
@@ -92,67 +72,65 @@ const SignUpPage = () => {
       });
     }
   }, [errors]);
+  useEffect(() => {
+    document.title = "Register Page";
+  }, []);
   return (
-    <SignUpPageStyles>
-      <div className="container">
-        <img
-          srcSet="/public/logo.png 2x"
-          alt="monkey-blogging"
-          className="logo"
-        />
-        <h1 className="heading">Monkey Blogging</h1>
-        <form className="form" onSubmit={handleSubmit(handlerSignup)}>
-          <Field>
-            <Label htmlFor="fullname">Fullname</Label>
-            <Input
-              type="text"
-              name="fullname"
-              placeholder="Enter your fullname"
-              control={control}
-            />
-          </Field>
-          <Field>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              control={control}
-            />
-          </Field>
-          <Field>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              type={togglePassword ? "text" : "password"}
-              name="password"
-              placeholder="Enter your password"
-              control={control}
-            >
-              {!togglePassword ? (
-                <IconEyeClose
-                  onClick={() => setTogglePassword(true)}
-                ></IconEyeClose>
-              ) : (
-                <IconEyeOpen
-                  onClick={() => setTogglePassword(false)}
-                ></IconEyeOpen>
-              )}
-            </Input>
-          </Field>
-          <Button
-            type="submit"
-            style={{
-              maxWidth: 350,
-              margin: "0 auto",
-            }}
-            isLoading={isSubmitting}
+    <AuthenticationPage>
+      <form className="form" onSubmit={handleSubmit(handlerSignup)}>
+        <Field>
+          <Label htmlFor="fullname">Fullname</Label>
+          <Input
+            type="text"
+            name="fullname"
+            placeholder="Enter your fullname"
+            control={control}
+          />
+        </Field>
+        <Field>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            control={control}
+          />
+        </Field>
+        <Field>
+          <Label htmlFor="password">Password</Label>
+          <Input
+            type={togglePassword ? "text" : "password"}
+            name="password"
+            placeholder="Enter your password"
+            control={control}
           >
-            Sign Up
-            {/* <LoadingSpinner></LoadingSpinner> */}
-          </Button>
-        </form>
-      </div>
-    </SignUpPageStyles>
+            {!togglePassword ? (
+              <IconEyeClose
+                onClick={() => setTogglePassword(true)}
+              ></IconEyeClose>
+            ) : (
+              <IconEyeOpen
+                onClick={() => setTogglePassword(false)}
+              ></IconEyeOpen>
+            )}
+          </Input>
+        </Field>
+        <div className="have-account">
+          You already have an account?{" "}
+          <NavLink to={"/sign-in"}>Sign in</NavLink>
+        </div>
+        <Button
+          type="submit"
+          style={{
+            maxWidth: 350,
+            margin: "0 auto",
+          }}
+          isLoading={isSubmitting}
+        >
+          Sign Up
+        </Button>
+      </form>
+    </AuthenticationPage>
   );
 };
 
