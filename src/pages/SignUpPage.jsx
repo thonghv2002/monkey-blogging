@@ -122,10 +122,12 @@ const SignUpPage = () => {
         <Button
           type="submit"
           style={{
+            width: "100%",
             maxWidth: 350,
             margin: "0 auto",
           }}
           isLoading={isSubmitting}
+          kind="primary"
         >
           Sign Up
         </Button>

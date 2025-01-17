@@ -1,17 +1,29 @@
 import PropTypes from "prop-types";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import LoadingSpinner from "../loading";
+import { NavLink } from "react-router-dom";
 
 const ButtonStyles = styled.button`
   cursor: pointer;
   padding: 0px 25px;
   line-height: 1;
   color: white;
-  background-image: linear-gradient(
-    to right bottom,
-    ${(props) => props.theme.primary},
-    ${(props) => props.theme.secondary}
-  );
+  ${(props) =>
+    props.kind === "secondary" &&
+    css`
+      background-color: white;
+      color: ${(props) => props.theme.primary};
+    `};
+  ${(props) =>
+    props.kind === "primary" &&
+    css`
+      color: white;
+      background-image: linear-gradient(
+        to right bottom,
+        ${(props) => props.theme.primary},
+        ${(props) => props.theme.secondary}
+      );
+    `};
   height: ${(props) => props.height || "66px"};
   border-radius: 8px;
   font-weight: 600;
@@ -19,7 +31,6 @@ const ButtonStyles = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* width: 100%; */
   &:disabled {
     opacity: 0.5;
     pointer-events: none;
@@ -34,13 +45,23 @@ const ButtonStyles = styled.button`
 const Button = ({
   type = "button",
   onClick = () => {},
+  kind = "secondary",
   children,
   ...props
 }) => {
-  const { isLoading } = props;
+  const { isLoading, to } = props;
   const child = isLoading ? <LoadingSpinner></LoadingSpinner> : children;
+  if (to !== "" && typeof to === "string") {
+    return (
+      <NavLink to={to} style={{ display: "inline-block" }}>
+        <ButtonStyles type={type} kind={kind} {...props}>
+          {child}
+        </ButtonStyles>
+      </NavLink>
+    );
+  }
   return (
-    <ButtonStyles type={type} onClick={onClick} {...props}>
+    <ButtonStyles type={type} kind={kind} onClick={onClick} {...props}>
       {child}
     </ButtonStyles>
   );
@@ -51,6 +72,8 @@ Button.propTypes = {
   onClick: PropTypes.func,
   children: PropTypes.node,
   isLoading: PropTypes.bool,
+  kind: PropTypes.string,
+  to: PropTypes.string,
 };
 
 export default Button;
