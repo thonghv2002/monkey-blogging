@@ -1,7 +1,6 @@
-import { signOut } from "firebase/auth";
 import styled from "styled-components";
-import Header from "~/components/layout/Header";
-import { auth } from "~/firebase-app/config";
+import Layout from "~/components/layout/Layout";
+import HomeBanner from "~/module/home/HomeBanner";
 
 const HomePageStyles = styled.div``;
 
@@ -11,7 +10,9 @@ const HomePage = () => {
   // };
   return (
     <HomePageStyles>
-      <Header></Header>
+      <Layout>
+        <HomeBanner></HomeBanner>
+      </Layout>
     </HomePageStyles>
   );
 };
