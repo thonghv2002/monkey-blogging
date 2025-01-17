@@ -19,7 +19,7 @@ const ButtonStyles = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  /* width: 100%; */
   &:disabled {
     opacity: 0.5;
     pointer-events: none;
